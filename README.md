@@ -1,326 +1,293 @@
-<div align="center">
-    
-# 🔬 StaphScope Web
+# 🧬 ESKAPE AMR Platform
 
-### A web-based interface for rapid *Staphylococcus aureus* genotyping and surveillance
+### A Unified, Species-Optimized Web Suite for Genomic Surveillance of ESKAPE Pathogens and *E. coli*
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Flask](https://img.shields.io/badge/flask-2.0+-green.svg)](https://flask.palletsprojects.com/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![DOI](https://img.shields.io/badge/DOI-10.1186%2Fs12864--026--12609--x-blue)](https://doi.org/10.1186/s12864-026-12609-x)
+Welcome to the **ESKAPE AMR Platform** – a free, open-source web application that integrates seven species-specific genomic analysis pipelines into a single, user-friendly interface.
 
-</div>
+[![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.0%2B-lightgrey.svg)](https://flask.palletsprojects.com/)
+[![Celery](https://img.shields.io/badge/Celery-5.3%2B-brightgreen.svg)](https://docs.celeryproject.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Stars](https://img.shields.io/github/stars/bbeckley-hub/eskape-web-platform.svg)](https://github.com/bbeckley-hub/eskape-web-platform/stargazers)
 
-## 📋 **Table of Contents**
-- [Overview](#-overview)
-- [Features](#-features)
-- [Architecture](#-architecture)
-- [Quick Start](#-quick-start)
-- [Installation](#-installation)
-- [Usage Guide](#-usage-guide)
-- [API Reference](#-api-reference)
-- [Deployment](#-deployment)
-- [Processing Large Datasets](#-processing-large-datasets)
-- [Citation](#-citation)
-- [Contributing](#-contributing)
-- [License](#-license)
-- [Contact](#-contact)
+## 📌 Development Status Notice
 
----
+> **This project is currently under active development.**
+> The web interface and core functionality are ready for testing and collaboration. We are actively seeking institutional hosting partners to transition the platform from a personal laptop to a dedicated server, enabling 24/7 availability for the wider research community. Your feedback, contributions, and collaboration are highly welcome.
 
-## 🎯 **Overview**
+## 📋 Table of Contents
 
-**StaphScope Web** is a user-friendly web interface for the [StaphScope command-line tool](https://github.com/bbeckley-hub/staphscope-typing-tool), a comprehensive bioinformatics pipeline for *Staphylococcus aureus* genomic analysis. It allows researchers and clinicians to upload bacterial genomes and receive detailed typing results without any command-line expertise.
+1.  [Overview](#-overview)
+2.  [Key Features](#-key-features)
+    *   [Integrated Pathogen Pipelines](#integrated-pathogen-pipelines)
+    *   [Web Application Features](#web-application-features)
+3.  [How It Works](#-how-it-works)
+    *   [Architecture Overview](#architecture-overview)
+    *   [Technology Stack](#technology-stack)
+4.  [Getting Started](#-getting-started)
+    *   [Prerequisites](#prerequisites)
+    *   [Installation for Local Development](#installation-for-local-development)
+    *   [Running the Services](#running-the-services)
+5.  [Usage Guide](#-usage-guide)
+    *   [Submitting a Job](#submitting-a-job)
+    *   [Understanding Your Results](#understanding-your-results)
+6.  [API Reference](#-api-reference)
+7.  [Deployment](#-deployment)
+    *   [System Requirements](#system-requirements)
+    *   [Using Gunicorn & Nginx](#using-gunicorn--nginx)
+    *   [Institutional Hosting](#institutional-hosting)
+8.  [For Power Users: Command-Line Pipelines](#-for-power-users-command-line-pipelines)
+9.  [Contributing](#-contributing)
+10. [License](#-license)
+11. [Contact & Support](#-contact--support)
+12. [Acknowledgements](#-acknowledgements)
 
-The tool integrates **six essential genotyping methods** into a single, cohesive workflow, making MRSA/MSSA surveillance accessible to all.
+## 🎯 Overview
 
----
+The **ESKAPE AMR Platform** is a fully-featured web application designed to democratize access to advanced bacterial genomic surveillance. It addresses the fragmentation of existing bioinformatics tools by providing a single, integrated interface for analyzing the most critical drug-resistant pathogens.
 
-## ✨ **Features**
+This platform leverages a robust backend to asynchronously run the species-optimized command-line pipelines, delivering comprehensive, publication-ready reports without requiring command-line expertise. It is built with the needs of researchers, clinicians, and public health labs in mind, particularly in low-resource settings.
 
-### 🔬 **Analysis Modules**
-| Module | Purpose | Outputs |
-|--------|---------|---------|
-| **FASTA QC** | Quality control and statistics | HTML/TSV/JSON reports |
-| **MLST Typing** | Multi-locus sequence typing | Sequence type, clonal complex |
-| **_spa_ Typing** | Protein A gene analysis | *spa* type, repeat patterns |
-| **SCC*mec* Typing** | Methicillin resistance cassette | Cassette type (I-XIII) |
-| **AMR Profiling** | Antimicrobial resistance genes | 5,000+ genes, risk categories |
-| **ABRicate Screening** | 9 databases (CARD, VFDB, PlasmidFinder, etc.) | Resistance, virulence, plasmids |
-| **Lineage Database** | Global epidemiological context | 44 major lineages |
-| **Visualization** | Interactive dashboards | PNG/SVG/PDF outputs |
+### Integrated Pathogen Pipelines
 
-### 🚀 **Web-Specific Featuress**
-- ✅ **Drag-and-drop file upload** (single, multiple, or ZIP)
-- ✅ **Module selection** – choose which analyses to run
-- ✅ **Real-time progress monitoring** with live logs
-- ✅ **Beautiful HTML reports** with interactive visualizations
-- ✅ **Download all results as a single ZIP**
-- ✅ **Responsive design** – works on desktop and tablet
-- ✅ **10-file limit** for fair resource usage
+The platform integrates the following species-specific pipelines:
 
-### 🛡️ **MRSA-Specific Innovations**
-- Automated MRSA/MSSA classification
-- Clinical gene flagging (PVL, enterotoxins, *van* genes)
-- Risk categorization: 'Critical Risk', 'High Risk'
-- Cross-genome pattern discovery
+| Pathogen | Pipeline | Key Analyses |
+| :--- | :--- | :--- |
+| *S. aureus* | **StaphScope** | MLST, *spa* typing, SCC*mec*, AMR, virulence, plasmids, lineage. |
+| *A. baumannii* | **AcinetoScope** | Dual MLST, K/O capsule typing, AMR, carbapenemase tracking. |
+| *E. coli* | **EcoliTyper** | MLST, serotyping, CH-typing, phylogrouping, AMR, virulence. |
+| *K. pneumoniae* | **Kleboscope** | MLST, K-locus typing, virulence markers (ICEKp, iuc, rmp), AMR. |
+| *P. aeruginosa* | **PseudoScope** | MLST, PAST serogrouping, AMR, virulence factors (exoU/exoS). |
+| *E. faecium* | **EnteroMark** | MLST, vancomycin/linezolid resistance, high-level aminoglycosides. |
+| *E. cloacae* complex | **EnteroScope** | MLST, carbapenemases, efflux pumps, biofilm markers. |
 
----
+## ✨ Key Features
 
-## 🏗️ **Architecture**
+### Web Application Features
+
+- **Asynchronous Job Processing:** Close your browser and receive an email when your analysis is complete.
+- **Intuitive File Upload:** Upload single or multiple FASTA files, or entire ZIP archives.
+- **Dynamic Module Selection:** Choose exactly which analyses to run for each pathogen.
+- **Real-Time Progress & Logs:** Monitor your job with live logs as they stream from the pipeline.
+- **Comprehensive, Tabbed Results:** Explore results in an organized, interactive interface for each module.
+- **One-Click Download:** Download all your results, images, and data as a single ZIP archive.
+- **Administrative Dashboard:** Monitor platform usage and moderate community feedback.
+- **Free and Open Source:** All code is released under the MIT license, ensuring full transparency and reproducibility.
+
+### Web Platform-Specific Features
+
+- **Country Monitoring:** Anonymized IP-based geolocation helps understand platform reach.
+- **Community Feedback:** Users can submit and share testimonials (moderated).
+- **Email Notifications:** Get a direct link to your results when the job finishes.
+- **Automatic Job Cleanup:** Old job data is automatically deleted after 24 hours.
+- **Tutorial & Documentation:** Built-in guide and video tutorial to get you started.
+- **Informative Pages:** Dedicated sections for publications, team, funding, roadmap, and data policy.
+
+## ⚙️ How It Works
+
+### Architecture Overview
+
+The platform uses a decoupled, asynchronous architecture to handle computational tasks efficiently.
 
 ```
-staphscope-web/
-├── app.py                 # Flask application with routes
-├── tasks.py               # Celery worker tasks
-├── config.py              # Configuration settings
-├── requirements.txt       # Python dependencies
-├── jobs/                  # Job directories (created at runtime)
-├── static/                # Static files (CSS, JS)
-│   ├── css/
-│   └── js/
-└── templates/             # HTML templates
-    ├── base.html
-    ├── index.html
-    ├── progress.html
-    └── results.html
+User Browser
+      │
+      ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     Frontend (Flask + Jinja2)               │
+│  • Landing page, tool pages, progress, results.             │
+│  • Bootstrap 5 for responsive design.                       │
+│  • AJAX polling for live logs.                              │
+└─────────────────────────────────────────────────────────────┘
+      │
+      ▼ (HTTP requests)
+┌─────────────────────────────────────────────────────────────┐
+│                 Backend (Flask routes)                      │
+│  • Upload handling, job creation, status endpoint.          │
+│  • Admin page for monitoring and comment moderation.        │
+└─────────────────────────────────────────────────────────────┘
+      │
+      ▼ (Celery task)
+┌─────────────────────────────────────────────────────────────┐
+│              Task Queue (Celery + Redis)                    │
+│  • Asynchronous pipeline execution.                         │
+│  • Each pipeline runs in its own Conda environment.         │
+│  • Logs written to job-specific directories.                │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### **Technology Stack**
-- **Backend**: Flask (Python web framework)
-- **Task Queue**: Celery with Redis broker
-- **Bioinformatics Engine**: StaphScope (conda environment)
-- **Frontend**: Bootstrap 5, JavaScript
-- **Deployment**: Gunicorn + Nginx + systemd
+### Technology Stack
 
----
+- **Backend:** Flask (Python web framework)
+- **Task Queue:** Celery with Redis broker
+- **Bioinformatics Engine:** Species-specific Conda environments
+- **Frontend:** Bootstrap 5, JavaScript, Jinja2 templates
+- **Deployment:** Gunicorn + Nginx (for production)
 
-## ⚡ **Quick Start (Local Development)**
+## 🚀 Getting Started (Local Development)
 
-### **Prerequisites**
-- Python 3.8+
-- Redis server
-- Conda (for StaphScope environment)
+### Prerequisites
 
-### **1. Clone the repository**
+- Python 3.9+
+- Conda (for pipeline environments)
+- Redis Server
+
+### Installation for Local Development
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/bbeckley-hub/eskape-web-platform.git
+    cd eskape-web-platform
+    ```
+
+2.  **Set up the Python environment:**
+    ```bash
+    conda create -n eskape-web python=3.9 -y
+    conda activate eskape-web
+    pip install -r requirements.txt
+    ```
+
+3.  **Install the required pipeline environments (example for StaphScope):**
+    ```bash
+    conda create -n staphscope_env -c conda-forge -c bioconda -c bbeckley-hub staphscope -y
+    # Repeat for ecolityper_env, acinetoscope_env, etc. as needed.
+    ```
+
+4.  **Configure paths in `config.py`:**
+    Update the `PIPELINE_EXECUTABLES` dictionary to point to the correct Conda environment paths for each pipeline.
+    ```python
+    PIPELINE_EXECUTABLES = {
+        'staphscope':   '/home/user/miniconda3/envs/staphscope_env/bin/staphscope',
+        # ... add other pipelines
+    }
+    ```
+
+5.  **Start Redis:**
+    ```bash
+    redis-server
+    ```
+
+### Running the Services
+
+You need to run three services in separate terminals.
+
+**Terminal 1 – Celery Worker:**
 ```bash
-git clone https://github.com/bbeckley-hub/staphscope-web.git
-cd staphscope-web
+conda activate eskape-web
+celery -A tasks worker --loglevel=info --concurrency 4
 ```
 
-### **2. Set up Python virtual environment**
+**Terminal 2 – Flask App:**
 ```bash
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-### **3. Install and start Redis**
-- **Ubuntu/Debian**: `sudo apt install redis-server && sudo systemctl start redis`
-- **macOS**: `brew install redis && brew services start redis`
-- **Windows**: Use WSL2 or download from [redis.io](https://redis.io/download)
-
-### **4. Configure paths**
-Edit `config.py` to point to your StaphScope installation:
-```python
-CONDA_PYTHON = "/path/to/your/miniconda3/envs/staphscope/bin/python"
-STAPHSCOPE_SCRIPT = "/path/to/your/miniconda3/envs/staphscope/bin/staphscope"
-```
-
-### **5. Start Celery worker**
-```bash
-celery -A tasks.celery worker --loglevel=info
-```
-
-### **6. Start Flask app**
-```bash
+conda activate eskape-web
 python app.py
 ```
 
-Visit `http://127.0.0.1:5000` and start analyzing!
+**Terminal 3 – (Optional) Cloudflare Tunnel for Public Access:**
+```bash
+cloudflared tunnel run staphscope
+```
+*Note: For local testing, simply visit `http://localhost:5000`.*
 
----
+## 📚 Usage Guide
 
-## 📚 **Usage Guide**
+### Submitting a Job
 
-### **Uploading Files**
-1. Navigate to the home page
-2. Click "Choose Files" and select one or more FASTA files (`.fasta`, `.fna`, `.fa`)
-3. Alternatively, upload a ZIP archive containing multiple FASTA files
-4. Select which modules to run (uncheck to skip)
-5. Click "Submit" and wait for analysis to complete
+1.  Go to the **Tools** page and select a pathogen.
+2.  **Upload your genome(s):** Click to select one or more FASTA files or a ZIP archive containing them.
+3.  **(Optional) Enter your email** to receive a notification when your job is finished.
+4.  **(Optional) Select modules:** Uncheck any analyses you wish to skip.
+5.  **(StaphScope) Adjust AMR settings:** Fine-tune the minimum identity and coverage thresholds or disable mutation reporting using the sliders.
+6.  Click **Submit Job**.
 
-### **Understanding Results**
-Results are organized into tabs:
-- **Comprehensive**: Unified report of all analyses
-- **MLST**: Sequence typing results
-- **_spa_**: *spa* typing with repeat patterns
-- **SCC*mec***: Methicillin resistance cassette typing
-- **AMR**: Antimicrobial resistance genes
-- **ABRicate**: Multi-database screening
-- **Lineage**: Phylogenetic lineage information
-- **FASTA QC**: Quality control metrics
-- **Visualization**: Interactive plots and dashboards
+### Understanding Your Results
 
-Each tab provides:
-- HTML reports for interactive viewing
-- TSV/JSON downloads for further analysis
-- Individual sample-level reports
+Once the job finishes, you will be automatically redirected to the results page, which is organized into tabs for each analysis module (e.g., MLST, AMR, ABRicate). Each tab provides:
 
-### **Downloading Results**
-Click the **"Download All Results (ZIP)"** button to get a complete archive of all analysis outputs.
+- An interactive HTML report you can view in your browser.
+- Links to download raw data (TSV, JSON, or CSV).
+- The option to download all results as a single ZIP file.
 
----
+## 🖥️ API Reference
 
-## 🖥️ **API Reference**
-
-The web app provides a simple REST API:
+The web app provides a simple REST API for programmatic access:
 
 | Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/` | GET | Home page with upload form |
-| `/submit` | POST | Submit files for analysis |
-| `/status/<job_id>` | GET | Check job status (PENDING, RUNNING, COMPLETED, FAILED) |
-| `/progress/<job_id>` | GET | Progress page with live logs |
-| `/results/<job_id>` | GET | Results page |
-| `/results/<job_id>/<path:filename>` | GET | Download specific result file |
-| `/results/<job_id>/download` | GET | Download all results as ZIP |
+| :--- | :--- | :--- |
+| `/` | GET | Home page with upload form. |
+| `/submit/<slug>` | POST | Submit files for analysis. |
+| `/status/<job_id>` | GET | Check job status (RUNNING, COMPLETED, FAILED). |
+| `/progress/<job_id>` | GET | Progress page with live logs. |
+| `/results/<job_id>` | GET | Results page. |
+| `/results/<job_id>/download` | GET | Download all results as ZIP. |
 
----
+## 🚀 Deployment
 
-## 🚀 **Production Deployment**
+### System Requirements
 
-### **Server Requirements**
-- Ubuntu 20.04/22.04 (or similar Linux)
-- 4+ CPU cores, 8+ GB RAM
-- 50+ GB storage
-- Domain name (optional but recommended)
+- **OS:** Ubuntu 20.04/22.04 (recommended)
+- **CPU:** 4+ cores
+- **RAM:** 8+ GB (16+ GB recommended for concurrent jobs)
+- **Storage:** 50+ GB for jobs, logs, and reference databases
 
-### **Deployment Steps**
-1. **Set up the server** (see [full deployment guide](#))
-2. **Install dependencies**: Conda, Redis, Nginx
-3. **Clone the repository**: `git clone https://github.com/bbeckley-hub/staphscope-web.git /var/www/staphscope-web`
-4. **Set up virtual environment**: `python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt`
-5. **Configure services**: Create systemd units for Gunicorn and Celery
-6. **Set up Nginx** as reverse proxy
-7. **Enable SSL** with Let's Encrypt
+### Using Gunicorn & Nginx
 
-### **Systemd Service Files**
+For a production deployment, use Gunicorn and Nginx. We provide systemd service file examples for Gunicorn and Celery in the `docs/` folder.
 
-**Gunicorn** (`/etc/systemd/system/staphscope-web.service`):
-```ini
-[Unit]
-Description=Gunicorn instance for StaphScope Web
-After=network.target
+### Institutional Hosting
 
-[Service]
-User=staphscope
-Group=staphscope
-WorkingDirectory=/var/www/staphscope-web
-Environment="PATH=/var/www/staphscope-web/venv/bin"
-ExecStart=/var/www/staphscope-web/venv/bin/gunicorn --workers 3 --bind unix:/var/www/staphscope-web/staphscope.sock app:app
+We are actively seeking institutional hosting partners to move this platform from a personal laptop to a reliable, 24/7 server environment. If your institution is interested in collaborating, please contact us.
 
-[Install]
-WantedBy=multi-user.target
-```
+## 📦 For Power Users: Command-Line Pipelines
 
-**Celery** (`/etc/systemd/system/staphscope-celery.service`):
-```ini
-[Unit]
-Description=Celery worker for StaphScope Web
-After=network.target redis.service
-
-[Service]
-User=staphscope
-Group=staphscope
-WorkingDirectory=/var/www/staphscope-web
-Environment="PATH=/var/www/staphscope-web/venv/bin"
-ExecStart=/var/www/staphscope-web/venv/bin/celery -A tasks.celery worker --loglevel=info
-
-[Install]
-WantedBy=multi-user.target
-```
-
----
-
-## 📦 **Processing Large Datasets**
-
-The web version limits uploads to **10 files per job** to ensure fair resource usage. For larger datasets, use the command-line version:
-
-### **For Linux/Ubuntu users:**
+The web version is designed for ease of use and has a 10-file limit. For large batch processing (100+ genomes), use the command-line versions, which are available as Conda packages on **Bioconda**.
 
 ```bash
-# 1. Install Miniconda (if not already)
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh
-source ~/.bashrc
-
-# 2. Create StaphScope environment
+# Example for StaphScope
 conda create -n staphscope -c conda-forge -c bioconda -c bbeckley-hub staphscope -y
 conda activate staphscope
-
-# 3. Update databases
-abricate --setupdb
-
-# 4. Navigate to your FASTA files
-cd /path/to/your/fasta/files
-
-# 5. Run StaphScope (adjust pattern to match your files)
-staphscope -i "*.fna" -o Staphscope_results
+abricate --setupdb   # Setup databases first
+staphscope -i "*.fna" -o results
 ```
 
-**No need to specify threads** – StaphScope automatically allocates optimal resources based on your CPU. ☕ Relax and enjoy your coffee while it runs!
+## 🤝 Contributing
+
+Contributions are welcome! We are particularly interested in:
+
+- Bug reports and feature requests.
+- Contributions to the code, documentation, or new pipelines.
+- Feedback from users in low-resource settings.
+
+Please feel free to submit a Pull Request or open an Issue on GitHub.
+
+1.  Fork the repository.
+2.  Create your feature branch (`git checkout -b feature/AmazingFeature`).
+3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4.  Push to the branch (`git push origin feature/AmazingFeature`).
+5.  Open a Pull Request.
+
+
+## 📄 License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+## 📬 Contact & Support
+
+**Author:** Brown Beckley  
+**Affiliation:** University of Ghana Medical School – Department of Medical Biochemistry  
+**Email:** [brownbeckley94@gmail.com](mailto:brownbeckley94@gmail.com)  
+**GitHub:** [@bbeckley-hub](https://github.com/bbeckley-hub)  
+**Project Link:** [https://github.com/bbeckley-hub/eskape-web-platform](https://github.com/bbeckley-hub/eskape-web-platform)  
+**Live Demo:** [https://staphscope.dpdns.org](https://staphscope.dpdns.org) *(Testing domain, may be offline)*
+
+## 🙏 Acknowledgements
+
+- The researchers and institutions who have provided data and feedback.
+- The open-source community for the incredible tools and libraries that make this work possible.
+- Dr. Vincent Amarh for guidance and support.
+- All contributors, beta testers, and users.
 
 ---
 
-## 📚 **Citation**
-
-If you use StaphScope in your research, please cite:
-
-> Beckley, B., Amarh, V. (2026). StaphScope: a species‑optimized computational pipeline for rapid and accessible *Staphylococcus aureus* genotyping and surveillance. *BMC Genomics*, 27:123.
-
-**DOI**: [10.1186/s12864-026-12609-x](https://doi.org/10.1186/s12864-026-12609-x)  
-**PMID**: 41645058
-
----
-
-## 🤝 **Contributing**
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📄 **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 📬 **Contact**
-
-**Author**: Brown Beckley  
-**Affiliation**: University of Ghana Medical School – Department of Medical Biochemistry  
-**Email**: [brownbeckley94@gmail.com](mailto:brownbeckley94@gmail.com)  
-**GitHub**: [@bbeckley-hub](https://github.com/bbeckley-hub)  
-**Project Link**: [https://github.com/bbeckley-hub/staphscope-web](https://github.com/bbeckley-hub/staphscope-web)
-
----
-
-## 🙏 **Acknowledgements**
-
-- StaphScope development team
-- University of Ghana Medical School
-- All contributors and beta testers
-
-  </div>
-
----
-
-⭐ **If you find this tool useful, please star the repository on GitHub!** ⭐
-
+⭐ **If you find this platform useful, please star the repository on GitHub!**

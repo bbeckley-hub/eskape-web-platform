@@ -56,7 +56,7 @@ The platform integrates the following species-specific pipelines:
 | :--- | :--- | :--- |
 | *S. aureus* | **StaphScope** | MLST, *spa* typing, SCC*mec*, AMR, virulence, plasmids, lineage. |
 | *A. baumannii* | **AcinetoScope** | Dual MLST, K/O capsule typing, AMR, carbapenemase tracking. |
-| *E. coli* | **EcoliTyper** | MLST, serotyping, CH-typing, phylogrouping, AMR, virulence. |
+| *E. coli* | **EcoliTyper** | MLST, serotyping, CH-typing, phylogrouping, pathotyping, AMR, virulence. |
 | *K. pneumoniae* | **Kleboscope** | MLST, K-locus typing, virulence markers (ICEKp, iuc, rmp), AMR. |
 | *P. aeruginosa* | **PseudoScope** | MLST, PAST serogrouping, AMR, virulence factors (exoU/exoS). |
 | *E. faecium* | **EnteroMark** | MLST, vancomycin/linezolid resistance, high-level aminoglycosides. |
@@ -245,7 +245,7 @@ The web version is designed for ease of use and has a 10-file limit. For large b
 
 ```bash
 # Example for StaphScope
-conda create -n staphscope -c conda-forge -c bioconda -c bbeckley-hub staphscope -y
+conda create -n staphscope -c conda-forge -c bioconda staphscope -y
 conda activate staphscope
 abricate --setupdb   # Setup databases first
 staphscope -i "*.fna" -o results

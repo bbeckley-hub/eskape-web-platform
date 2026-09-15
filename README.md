@@ -19,6 +19,30 @@ Welcome to the **ESKAPE AMR Platform** – a free, open-source web application t
 
 The platform is live at: **[https://eskape.bio](https://eskape.bio)**
 
+## 📸 Screenshots
+
+### Home
+![Home page](screenshots/04-submit.png)
+
+### Tools
+![Tools page](screenshots/02-tools.png)
+
+### StaphScope submission form
+
+![StaphScope page](screenshots/01-home.png)
+
+### EcoliTyper submission
+![EcoliTyper  page](screenshots/03-tutorial.png)
+
+### Publications
+![Progress page](screenshots/05-progress.png)
+
+### About
+![Results page](screenshots/06-results.png)
+
+### Community engagement
+![Community page](screenshots/07-publications.png)
+
 ## 📋 Table of Contents
 
 1.  [Overview](#-overview)
@@ -335,7 +359,8 @@ Please feel free to submit a Pull Request or open an Issue on GitHub.
 
 If you use this platform or any of its component tools, please cite the relevant publications:
 
-*   **StaphScope:** Beckley B, Amarh V. (2026). StaphScope: a species‑optimized computational pipeline for rapid and accessible *Staphylococcus aureus* genotyping and surveillance. *BMC Genomics*, 27:261. [DOI: 10.1186/s12864-026-12609-x](https://doi.org/10.1186/s12864-026-12609-x)
+*   **StaphScope:** Beckley B, Amarh V. StaphScope: a species-optimized computational pipeline for rapid and accessible *Staphylococcus aureus* genotyping and surveillance. *BMC Genomics*. 2026 Feb 6;27(1):261. doi: 10.1186/s12864-026-12609-x. PMID: 41645058; PMCID: PMC12977718.
+*   **EcoliTyper:** Beckley B, Amarh V. EcoliTyper: a species-optimized computational pipeline for comprehensive genotyping and surveillance of *Escherichia coli*. *BMC Bioinformatics*. 2026 Jun 9;27(1):182. doi: 10.1186/s12859-026-06529-6. PMID: 42265598; PMCID: PMC13480193.
 
 ## 📄 License
 
@@ -360,3 +385,4 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 ---
 
 ⭐ **If you find this platform useful, please star the repository on GitHub!**
+

@@ -34,6 +34,15 @@ The platform is live at: **[https://eskape.bio](https://eskape.bio)**
 ### EcoliTyper submission
 ![EcoliTyper  page](screenshots/03-tutorial.png)
 
+### Live logs
+![Live logs](screenshots/08-livelogs.png)
+
+### Results page
+![Results page](screenshots/Results-section.png)
+
+### Sample page
+![Comprehensive](screenshots/StaphScope-Comprehensive-Report.png)
+
 ### Publications
 ![Progress page](screenshots/05-progress.png)
 
